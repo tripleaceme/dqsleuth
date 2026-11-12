@@ -1,0 +1,15 @@
+{
+  "name": "dqsleuth",
+  "owner": { "name": "Ayoade Adegbite", "url": "https://github.com/tripleaceme" },
+  "metadata": {
+    "description": "Data quality investigation tools for Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "dqsleuth",
+      "source": "./",
+      "description": "Read-only MCP server + investigation skill for data quality: metric-drop attribution, duplicates, join integrity, freshness and dbt test failures.",
+      "category": "data"
+    }
+  ]
+}

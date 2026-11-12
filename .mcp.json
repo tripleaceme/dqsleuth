@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "dqsleuth": {
+      "command": "uvx",
+      "args": ["dqsleuth@latest", "--root", "${CLAUDE_PROJECT_DIR}"],
+      "env": {
+        "DQSLEUTH_SOURCES": "${DQSLEUTH_SOURCES:-}",
+        "DQSLEUTH_DBT_TARGET": "${DQSLEUTH_DBT_TARGET:-}",
+        "DQSLEUTH_POSTGRES_URL": "${DQSLEUTH_POSTGRES_URL:-}"
+      }
+    }
+  }
+}

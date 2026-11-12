@@ -1,0 +1,10 @@
+{
+  "name": "dqsleuth",
+  "version": "0.1.0",
+  "description": "Investigate data quality problems from Claude Code: explain metric drops, diagnose duplicates, orphaned joins, stale tables and failing dbt tests. Read-only, local-first (DuckDB).",
+  "author": { "name": "Ayoade Adegbite", "url": "https://github.com/tripleaceme" },
+  "homepage": "https://github.com/tripleaceme/dqsleuth",
+  "repository": "https://github.com/tripleaceme/dqsleuth",
+  "license": "MIT",
+  "keywords": ["data-quality", "dbt", "duckdb", "analytics-engineering", "mcp"]
+}

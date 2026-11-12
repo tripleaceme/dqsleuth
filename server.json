@@ -1,0 +1,32 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.tripleaceme/dqsleuth",
+  "title": "dqsleuth",
+  "description": "Read-only data quality investigation: metric-drop attribution, duplicates, joins, freshness, dbt tests.",
+  "repository": {
+    "url": "https://github.com/tripleaceme/dqsleuth",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "dqsleuth",
+      "version": "0.1.0",
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
+        {
+          "name": "DQSLEUTH_ROOT",
+          "description": "Project directory to scan for data files and dbt artifacts. Defaults to the working directory.",
+          "isRequired": false
+        },
+        {
+          "name": "DQSLEUTH_POSTGRES_URL",
+          "description": "Optional Postgres URL, attached read-only. Use a read-only role.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

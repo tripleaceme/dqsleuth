@@ -1,0 +1,50 @@
+{
+ "metadata": {
+  "generated_at": "2026-10-31T06:00:00Z",
+  "invocation_id": "demo-0001"
+ },
+ "results": [
+  {
+   "unique_id": "model.shop.stg_orders",
+   "status": "success",
+   "failures": null,
+   "message": "OK",
+   "compiled_code": null
+  },
+  {
+   "unique_id": "model.shop.stg_customers",
+   "status": "success",
+   "failures": null,
+   "message": "OK",
+   "compiled_code": null
+  },
+  {
+   "unique_id": "model.shop.fct_revenue",
+   "status": "success",
+   "failures": null,
+   "message": "OK",
+   "compiled_code": null
+  },
+  {
+   "unique_id": "test.shop.unique_stg_orders_order_id.1a2b3c",
+   "status": "fail",
+   "failures": 25,
+   "message": "Got 25 results, configured to fail if != 0",
+   "compiled_code": "select order_id as unique_field, count(*) as n_records from orders group by order_id having count(*) > 1"
+  },
+  {
+   "unique_id": "test.shop.relationships_stg_orders_customer_id__customer_id__ref_stg_customers_.4d5e6f",
+   "status": "fail",
+   "failures": 12,
+   "message": "Got 12 results, configured to fail if != 0",
+   "compiled_code": "select o.customer_id from orders o left join customers c on o.customer_id = c.customer_id where o.customer_id is not null and c.customer_id is null"
+  },
+  {
+   "unique_id": "test.shop.not_null_fct_revenue_revenue_date.7a8b9c",
+   "status": "pass",
+   "failures": 0,
+   "message": null,
+   "compiled_code": "select * from fct_revenue where revenue_date is null"
+  }
+ ]
+}

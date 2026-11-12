@@ -1,0 +1,218 @@
+{
+ "metadata": {
+  "dbt_version": "1.10.0",
+  "project_name": "shop"
+ },
+ "nodes": {
+  "model.shop.stg_orders": {
+   "unique_id": "model.shop.stg_orders",
+   "name": "stg_orders",
+   "resource_type": "model",
+   "config": {
+    "materialized": "view"
+   },
+   "depends_on": {
+    "nodes": [
+     "source.shop.raw.orders"
+    ],
+    "macros": []
+   },
+   "relation_name": "\"shop\".\"main\".\"stg_orders\"",
+   "original_file_path": "models/stg_orders.sql",
+   "raw_code": "select * from {{ source('raw','orders') }}"
+  },
+  "model.shop.stg_customers": {
+   "unique_id": "model.shop.stg_customers",
+   "name": "stg_customers",
+   "resource_type": "model",
+   "config": {
+    "materialized": "view"
+   },
+   "depends_on": {
+    "nodes": [
+     "source.shop.raw.customers"
+    ],
+    "macros": []
+   },
+   "relation_name": "\"shop\".\"main\".\"stg_customers\"",
+   "original_file_path": "models/stg_customers.sql",
+   "raw_code": "select * from {{ source('raw','customers') }}"
+  },
+  "model.shop.fct_revenue": {
+   "unique_id": "model.shop.fct_revenue",
+   "name": "fct_revenue",
+   "resource_type": "model",
+   "config": {
+    "materialized": "table"
+   },
+   "depends_on": {
+    "nodes": [
+     "model.shop.stg_orders",
+     "model.shop.stg_customers"
+    ],
+    "macros": []
+   },
+   "relation_name": "\"shop\".\"main\".\"fct_revenue\"",
+   "original_file_path": "models/fct_revenue.sql",
+   "raw_code": "select ... from {{ ref('stg_orders') }} join {{ ref('stg_customers') }} ..."
+  },
+  "test.shop.unique_stg_orders_order_id.1a2b3c": {
+   "unique_id": "test.shop.unique_stg_orders_order_id.1a2b3c",
+   "name": "unique_stg_orders_order_id",
+   "resource_type": "test",
+   "column_name": "order_id",
+   "test_metadata": {
+    "name": "unique",
+    "kwargs": {
+     "column_name": "order_id"
+    }
+   },
+   "config": {
+    "severity": "ERROR"
+   },
+   "depends_on": {
+    "nodes": [
+     "model.shop.stg_orders"
+    ],
+    "macros": [
+     "macro.dbt.test_unique"
+    ]
+   },
+   "original_file_path": "models/schema.yml",
+   "compiled_code": "select order_id as unique_field, count(*) as n_records from orders group by order_id having count(*) > 1"
+  },
+  "test.shop.relationships_stg_orders_customer_id__customer_id__ref_stg_customers_.4d5e6f": {
+   "unique_id": "test.shop.relationships_stg_orders_customer_id__customer_id__ref_stg_customers_.4d5e6f",
+   "name": "relationships_stg_orders_customer_id__customer_id__ref_stg_customers_",
+   "resource_type": "test",
+   "column_name": "customer_id",
+   "test_metadata": {
+    "name": "relationships",
+    "kwargs": {
+     "column_name": "customer_id",
+     "to": "ref('stg_customers')",
+     "field": "customer_id"
+    }
+   },
+   "config": {
+    "severity": "ERROR"
+   },
+   "depends_on": {
+    "nodes": [
+     "model.shop.stg_customers",
+     "model.shop.stg_orders"
+    ],
+    "macros": [
+     "macro.dbt.test_relationships"
+    ]
+   },
+   "original_file_path": "models/schema.yml",
+   "compiled_code": "select o.customer_id from orders o left join customers c on o.customer_id = c.customer_id where o.customer_id is not null and c.customer_id is null"
+  },
+  "test.shop.not_null_fct_revenue_revenue_date.7a8b9c": {
+   "unique_id": "test.shop.not_null_fct_revenue_revenue_date.7a8b9c",
+   "name": "not_null_fct_revenue_revenue_date",
+   "resource_type": "test",
+   "column_name": "revenue_date",
+   "test_metadata": {
+    "name": "not_null",
+    "kwargs": {
+     "column_name": "revenue_date"
+    }
+   },
+   "config": {
+    "severity": "ERROR"
+   },
+   "depends_on": {
+    "nodes": [
+     "model.shop.fct_revenue"
+    ],
+    "macros": [
+     "macro.dbt.test_not_null"
+    ]
+   },
+   "original_file_path": "models/schema.yml",
+   "compiled_code": "select * from fct_revenue where revenue_date is null"
+  }
+ },
+ "sources": {
+  "source.shop.raw.orders": {
+   "unique_id": "source.shop.raw.orders",
+   "name": "orders",
+   "source_name": "raw",
+   "resource_type": "source",
+   "relation_name": "\"shop\".\"raw\".\"orders\""
+  },
+  "source.shop.raw.customers": {
+   "unique_id": "source.shop.raw.customers",
+   "name": "customers",
+   "source_name": "raw",
+   "resource_type": "source",
+   "relation_name": "\"shop\".\"raw\".\"customers\""
+  }
+ },
+ "exposures": {
+  "exposure.shop.revenue_dashboard": {
+   "unique_id": "exposure.shop.revenue_dashboard",
+   "name": "revenue_dashboard",
+   "resource_type": "exposure",
+   "depends_on": {
+    "nodes": [
+     "model.shop.fct_revenue"
+    ]
+   }
+  }
+ },
+ "parent_map": {
+  "source.shop.raw.orders": [],
+  "source.shop.raw.customers": [],
+  "model.shop.stg_orders": [
+   "source.shop.raw.orders"
+  ],
+  "model.shop.stg_customers": [
+   "source.shop.raw.customers"
+  ],
+  "model.shop.fct_revenue": [
+   "model.shop.stg_orders",
+   "model.shop.stg_customers"
+  ],
+  "test.shop.unique_stg_orders_order_id.1a2b3c": [
+   "model.shop.stg_orders"
+  ],
+  "test.shop.relationships_stg_orders_customer_id__customer_id__ref_stg_customers_.4d5e6f": [
+   "model.shop.stg_customers",
+   "model.shop.stg_orders"
+  ],
+  "test.shop.not_null_fct_revenue_revenue_date.7a8b9c": [
+   "model.shop.fct_revenue"
+  ],
+  "exposure.shop.revenue_dashboard": [
+   "model.shop.fct_revenue"
+  ]
+ },
+ "child_map": {
+  "source.shop.raw.orders": [
+   "model.shop.stg_orders"
+  ],
+  "source.shop.raw.customers": [
+   "model.shop.stg_customers"
+  ],
+  "model.shop.stg_orders": [
+   "model.shop.fct_revenue",
+   "test.shop.unique_stg_orders_order_id.1a2b3c",
+   "test.shop.relationships_stg_orders_customer_id__customer_id__ref_stg_customers_.4d5e6f"
+  ],
+  "model.shop.stg_customers": [
+   "model.shop.fct_revenue",
+   "test.shop.relationships_stg_orders_customer_id__customer_id__ref_stg_customers_.4d5e6f"
+  ],
+  "model.shop.fct_revenue": [
+   "test.shop.not_null_fct_revenue_revenue_date.7a8b9c",
+   "exposure.shop.revenue_dashboard"
+  ],
+  "test.shop.unique_stg_orders_order_id.1a2b3c": [],
+  "test.shop.relationships_stg_orders_customer_id__customer_id__ref_stg_customers_.4d5e6f": [],
+  "test.shop.not_null_fct_revenue_revenue_date.7a8b9c": [],
+  "exposure.shop.revenue_dashboard": []
+ }
+}
